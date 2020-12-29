@@ -1,3 +1,11 @@
 language: java
 jdk:
   - openjdk11
+script:
+  - mvn package
+deploy:
+  provider: releases
+  file_glob: true
+  file:
+    - target/trsfile-*.jar
+  skip_cleanup: true
