@@ -9,3 +9,5 @@ deploy:
   file:
     - target/trsfile-*.jar
   skip_cleanup: true
+  on:
+    tags: true
