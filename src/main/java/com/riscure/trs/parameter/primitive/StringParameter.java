@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-public class StringParameter implements TraceParameter {
+public class StringParameter extends TraceParameter {
+    private static final String INVALID_LENGTH = "Error parsing string: Expected (%d) bytes but found (%d)";
     private final String value;
 
     public StringParameter(String value) {
@@ -22,8 +23,8 @@ public class StringParameter implements TraceParameter {
 
     public static StringParameter deserialize(DataInputStream dis, int length) throws IOException {
         byte[] bytes = new byte[length];
-        int read = dis.read(bytes);
-        if (read != length) throw new IOException("Failed to read string parameter");
+        int bytesRead = dis.read(bytes);
+        if (bytesRead != length) throw new IOException(String.format(INVALID_LENGTH, length, bytesRead));
         return new StringParameter(new String(bytes, StandardCharsets.UTF_8));
     }
 
@@ -43,8 +44,13 @@ public class StringParameter implements TraceParameter {
     }
 
     @Override
+    public String getScalarValue() {
+        return getValue();
+    }
+
+    @Override
     public String toString() {
-        return value;
+        return getValue();
     }
 
     @Override
